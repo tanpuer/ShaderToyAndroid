@@ -19,7 +19,7 @@ void ShaderToyApp::create(ANativeWindow *window) {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_BLEND);
-    mFilter = std::make_unique<ShaderToyFilter>(mAssetManager, "raining");
+    mFilter = std::make_unique<ShaderToyFilter>(mAssetManager, name);
     mFilter->init();
 }
 
@@ -52,7 +52,8 @@ void ShaderToyApp::setName(const char *name) {
         return;
     }
     mFilter.reset(nullptr);
-    mFilter = std::make_unique<ShaderToyFilter>(mAssetManager, std::string(name));
+    this->name = std::string(name);
+    mFilter = std::make_unique<ShaderToyFilter>(mAssetManager, this->name);
     mFilter->init();
     mFilter->setWindowSize(mWidth, mHeight);
 }
