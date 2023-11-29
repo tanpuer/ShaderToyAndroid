@@ -1,4 +1,4 @@
-![image](https://github.com/tanpuer/ShaderToyAndroid/blob/main/show.gif)
+![image](https://github.com/tanpuer/ShaderToyAndroid/blob/master/show.gif)
 
 ###背景
 最近组里升级Skia，接入的Skia116可以很轻松地将shadertoy的特效移植过来。
