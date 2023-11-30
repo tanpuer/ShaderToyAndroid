@@ -1,5 +1,5 @@
 //
-// Created by cw404021@cw404021@alibaba-inc.com on 2023/11/27.
+// Created by cw404021@alibaba-inc.com on 2023/11/27.
 //
 #define STB_IMAGE_IMPLEMENTATION
 
