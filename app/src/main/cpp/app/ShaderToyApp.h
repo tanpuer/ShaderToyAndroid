@@ -35,7 +35,7 @@ private:
     std::shared_ptr<AssetManager> mAssetManager;
     std::unique_ptr<ShaderToyFilter> mFilter;
     int mWidth = 0, mHeight = 0;
-    std::string name = "raining";
+    std::string name = "torrance";
 
 };
 
