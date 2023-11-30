@@ -18,10 +18,6 @@ ShaderToyFilter::ShaderToyFilter(std::shared_ptr<AssetManager> assetManager,
 
 void ShaderToyFilter::init() {
     auto vertexShaderStr = assetManager->readFile("vertex_shader.glsl");
-//    auto fragmentShaderStr = assetManager->readFile("simple/simple.glsl");
-//    auto fragmentShaderStr = assetManager->readFile("uv-warp/uv-warp.glsl");
-//    auto fragmentShaderStr = assetManager->readFile("snow/snow.glsl");
-//    auto fragmentShaderStr = assetManager->readFile("sunny/sunny.glsl");
     auto path = "shader/" + name + "/" + name + ".glsl";
     ALOGD("ShaderToyFilter::init %s", path.c_str())
     auto fragmentShaderStr = assetManager->readFile(path.c_str());
@@ -75,14 +71,13 @@ void ShaderToyFilter::setUniforms(long timeMills) {
     auto iFrame = glGetUniformLocation(mProgram, "iFrame");
     mFrameCount++;
     glUniform1i(iFrame, (GLint) mFrameCount);
-    //5. iMouse
+    //5. iMouse ignore
 
-    //6. iMouseButton
+    //6. iMouseButton ignore
 
     //7. iViewMatrix
     auto iViewMatrix = glGetUniformLocation(mProgram, "iViewMatrix");
     setIdentityM(&matrix);
-//    setRotateM(&matrix, 0.0, 180.0, 0.0, 1.0, 0.0);
     glUniformMatrix4fv(iViewMatrix, 1, GL_FALSE, matrix.m);
     //8. resolution
     glUniform2fv(glGetUniformLocation(mProgram, "resolution"), 1, resolution);
@@ -173,7 +168,7 @@ void ShaderToyFilter::initTextures() {
 }
 
 void ShaderToyFilter::bindTextures() {
-//    uniform sampler2D iChannel0;
+//    uniform sampler2D iChannel0; 得改成 uniform sampler2D iChannel0;
 //    uniform sampler2D iChannel1;
 //    uniform sampler2D iChannel2;
 //    uniform sampler2D iChannel3;
