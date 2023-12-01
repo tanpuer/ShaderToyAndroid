@@ -3,7 +3,9 @@ package com.agil.shadertoy
 import android.content.res.AssetManager
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import android.view.Surface
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ShaderToyEngine {
 
@@ -14,6 +16,7 @@ class ShaderToyEngine {
     private val shaderToyHandler = Handler(shaderToyHandlerThread.looper)
 
     private val ctx = ShaderToyApp.getInstance()
+    private var finishDraw = AtomicBoolean(true)
 
     init {
         shaderToyHandler.post {
@@ -23,13 +26,17 @@ class ShaderToyEngine {
 
     fun create(surface: Surface) {
         shaderToyHandler.post {
+            val start = System.currentTimeMillis()
             nativeCreate(surface)
+            Log.d(TAG, "create cost ${System.currentTimeMillis() - start}")
         }
     }
 
     fun change(width: Int, height: Int, time: Long) {
         shaderToyHandler.post {
+            val start = System.currentTimeMillis()
             nativeChange(width, height, time)
+            Log.d(TAG, "change cost ${System.currentTimeMillis() - start}")
         }
     }
 
@@ -40,8 +47,16 @@ class ShaderToyEngine {
     }
 
     fun doFrame(time: Long) {
+        if (!finishDraw.get()) {
+            Log.d(TAG, "doFrame ignore current vysnc draw")
+            return
+        }
         shaderToyHandler.post {
+            finishDraw.set(false)
+            val start = System.currentTimeMillis()
             nativeDoFrame(time)
+            Log.d(TAG, "doFrame cost ${System.currentTimeMillis() - start}")
+            finishDraw.set(true)
         }
     }
 
@@ -70,6 +85,8 @@ class ShaderToyEngine {
         init {
             System.loadLibrary("shadertoy")
         }
+
+        private const val TAG = "ShaderToyEngine"
     }
 
 }
