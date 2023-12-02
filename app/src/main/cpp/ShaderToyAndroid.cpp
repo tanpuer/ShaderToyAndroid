@@ -4,7 +4,7 @@
 #include "android/native_window_jni.h"
 #include "ShaderToyApp.h"
 
-const char *HYSkiaEngine = "com/agil/shadertoy/ShaderToyEngine";
+const char *ShaderToyEngine = "com/agil/shadertoy/ShaderToyEngine";
 jobject globalAssets = nullptr;
 static ShaderToyApp *app = nullptr;
 
@@ -104,7 +104,7 @@ extern "C" jint JNI_OnLoad(JavaVM *jvm, void *p) {
     if (jvm->GetEnv((void **) (&env), JNI_VERSION_1_6) != JNI_OK) {
         return JNI_ERR;
     }
-    RegisterNativeMethods(env, HYSkiaEngine, g_RenderMethods, std::size(g_RenderMethods));
+    RegisterNativeMethods(env, ShaderToyEngine, g_RenderMethods, std::size(g_RenderMethods));
     return JNI_VERSION_1_6;
 }
 
@@ -114,5 +114,5 @@ extern "C" void JNI_OnUnload(JavaVM *jvm, void *p) {
     if (jvm->GetEnv((void **) env, JNI_VERSION_1_6) != JNI_OK) {
         return;
     }
-    UnRegisterNativeMethods(env, HYSkiaEngine);
+    UnRegisterNativeMethods(env, ShaderToyEngine);
 }
