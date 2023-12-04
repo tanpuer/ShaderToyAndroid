@@ -72,7 +72,9 @@ void ShaderToyFilter::setUniforms(long timeMills) {
     mFrameCount++;
     glUniform1i(iFrame, (GLint) mFrameCount);
     //5. iMouse ignore
-
+    GLfloat mouse[3] = {0.0, 0.0, 0.0};
+    auto iMouse = glGetUniformLocation(mProgram, "iMouse");
+    glUniform3fv(iMouse, 1, mouse);
     //6. iMouseButton ignore
 
     //7. iViewMatrix
@@ -85,6 +87,7 @@ void ShaderToyFilter::setUniforms(long timeMills) {
     auto time = glGetUniformLocation(mProgram, "time");
     glUniform1f(time, (GLfloat) timeMills / 1000);
     //10. mouse ignore
+    glUniform3fv(glGetUniformLocation(mProgram, "mouse"), 1, mouse);
 
     checkGLError("ShaderToyFilter::setUniforms");
 }
