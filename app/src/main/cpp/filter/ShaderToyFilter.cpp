@@ -108,6 +108,7 @@ void ShaderToyFilter::draw() {
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);
     checkGLError("ShaderToyFilter::draw");
     glDisableVertexAttribArray(aPositionLocation);
+    glDisableVertexAttribArray(aTextureCoordinateLocation);
 }
 
 void ShaderToyFilter::initTextures() {
