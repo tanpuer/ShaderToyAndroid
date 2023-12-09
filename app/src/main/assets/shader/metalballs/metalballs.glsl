@@ -1,27 +1,13 @@
-// Created by mu6k - https://www.shadertoy.com/view/Mss3WN
-// Adapted for VS Code Shadertoy
-
-/*by mu6k, Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-
- I have no idea how I ended up here, but it demosceneish enough to publish.
- You can use the mouse to rotate the camera around the 'object'.
- If you can't see the shadows, increase occlusion_quality.
- If it doesn't compile anymore decrease object_count and render_steps.
-
- 15/06/2013:
- - published
- 
- 16/06/2013:
- - modified for better performance and compatibility
-
- muuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuusk!*/
+#version 300 es
 
 precision highp float;
 precision highp int;
 
 uniform vec2 iResolution;
 uniform float iTime;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+out vec4 fragColor;
+
 #define iGlobalTime iTime
 
 #define occlusion_enabled
@@ -227,5 +213,5 @@ void main()
     color -= hash(color.xy + uv.xy) * .015;
     color -= length(uv) * .1;
     color = cc(color, .5, .6);
-    gl_FragColor = vec4(color, 1.0);
+    fragColor = vec4(color, 1.0);
 }

@@ -9,7 +9,7 @@ vertext.glsl使用同一个文件，参考Assets目录，将fragment.glsl文件�
 
 从shadertoy上拷贝来的代码需要修改下，常见的修改点：
 1. 确认有没有main函数。
-2. 声明out vec4 fragColor，如果是es2.0使用gl_FragColor。
+2. 全部使用3.0的写法，比如out, texture等。
 3. gl_FragCoord / iResolution.xy 修改为gl_FragCoord.xy / iResolution.xy。
 4. 贴图修改//uniform shader iChannel0;为//#iChannel0 "assets://shader/raining/raining.png"。
 5. 其余的可以看日志修改。

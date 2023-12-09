@@ -11,7 +11,7 @@ uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
 in vec2 vTextureCoord;
-out vec4 outColor;
+out vec4 fragColor;
 
 #define HW_PERFORMANCE 0
 #if HW_PERFORMANCE==0
@@ -656,5 +656,5 @@ tot += col;
 tot /= float(AA*AA);
 #endif
 
-outColor = vec4( tot, 1.0 );
+fragColor = vec4( tot, 1.0 );
 }

@@ -1,4 +1,4 @@
-// Example shader created for VS Code ShaderToy extension
+#version 300 es
 
 precision highp float;
 precision highp int;
@@ -10,6 +10,8 @@ uniform int iFrame;
 uniform mat4 iViewMatrix;
 uniform vec2 resolution;
 uniform float time;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 #define iGlobalTime iTime
 
 void main() {
@@ -24,5 +26,5 @@ void main() {
 
     uv = fract(uv);
 
-    gl_FragColor = vec4(uv, 1.0, 1.0);
+    fragColor = vec4(uv, 1.0, 1.0);
 }

@@ -1,12 +1,15 @@
+#version 300 es
+
 precision highp float;
 precision highp int;
 
 uniform vec2 iResolution;
 uniform float iTime;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 void main()
 {
-    vec4 fragColor = vec4(0.);
     float snow = 0.0;
     float gradient = (1.0 - float(gl_FragCoord.y / iResolution.x)) * 0.4;
     float random = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
@@ -36,5 +39,5 @@ void main()
     }
 
 
-    gl_FragColor = vec4(snow) + gradient * vec4(0.4, 0.8, 1.0, 0.0) + random * 0.01;
+    fragColor = vec4(snow) + gradient * vec4(0.4, 0.8, 1.0, 0.0) + random * 0.01;
 }

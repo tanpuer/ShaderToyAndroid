@@ -1,12 +1,12 @@
-// Created by liamboone - https://www.shadertoy.com/view/ldBBRV
-// Adapted for VS Code Shadertoy
+#version 300 es
 
 precision highp float;
 precision highp int;
 
 uniform vec2 iResolution;
 uniform float iTime;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 const float PI = 3.14159;
 
@@ -53,7 +53,6 @@ void main()
     float y = smoothstep(3., 5., blobs);
     float z = smoothstep(3., 8., blobs);
 
-    vec4 fragColor;
     fragColor = vec4(20.1, 2., 2.1, 5.) - vec4(x * vec3(1., 0.5, 0.5) +
     y * vec3(2.5, 1., 0.5) +
     z * vec3(.5, 0.5, 1.), 1.);
@@ -61,5 +60,4 @@ void main()
 
     fragColor = vec4((1. - vec3(pow(length(uv * 0.4), 1.5))) * vec3(0.9, 1.0, 0.9),
                      1.) * saturate(pow(fragColor, vec4(2.7)));
-    gl_FragColor = fragColor;
 }

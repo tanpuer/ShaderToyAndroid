@@ -1,3 +1,5 @@
+#version 300 es
+
 precision highp float;
 precision highp int;
 
@@ -6,7 +8,8 @@ uniform float iTime;
 //uniform shader iChannel0;
 //#iChannel0 "assets://shader/raining/raining.png"
 uniform sampler2D iChannel0;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 float S(float a, float b, float t) {
     return smoothstep(a, b, t);
@@ -104,7 +107,6 @@ vec2 Drops(vec2 uv, float t, float l0, float l1, float l2) {
 
 void main()
 {
-    vec4 fragColor;
     vec2 fragCoord = (gl_FragCoord.xy - .5 * iResolution.xy) / iResolution.y;
     vec2 uv = fragCoord;
 
@@ -142,8 +144,7 @@ void main()
 
     float focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x));
     vec2 flippedTexCoords = vec2(vTextureCoord.s, 1.0 - vTextureCoord.t);
-    vec3 col = texture2D(iChannel0, flippedTexCoords).rgb;
+    vec3 col = texture(iChannel0, flippedTexCoords).rgb;
     col += vec3(n * focus, 0.);
     fragColor = vec4(col, 1.);
-    gl_FragColor = fragColor;
 }

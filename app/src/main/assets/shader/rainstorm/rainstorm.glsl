@@ -1,3 +1,5 @@
+#version 300 es
+
 precision highp float;
 precision highp int;
 
@@ -8,7 +10,8 @@ uniform float iTime;
 //#iChannel1 "assets://shader/rainstorm/channel1.png"
 uniform sampler2D iChannel0;
 uniform sampler2D iChannel1;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 void MakeViewRay(in vec2 fragCoord, out vec3 eye, out vec3 ray)
 {
@@ -46,10 +49,10 @@ float Noise(in vec3 x, float lod_bias)
 
     vec2 uv = (p.xy + vec2(37.0, 17.0) * p.z) + f.xy;
     #ifdef CHEAPER_NOISES
-//    vec2 rg = texture2D(iChannel1, uv * (1. / 256.0), lod_bias).yx;
-    vec2 rg = texture2D(iChannel1, vTextureCoord).yx;
+//    vec2 rg = texture(iChannel1, uv * (1. / 256.0), lod_bias).yx;
+    vec2 rg = texture(iChannel1, vTextureCoord).yx;
     #else
-    vec2 rg = texture2D(iChannel1, (uv + 0.5) / 256.0, lod_bias).yx;
+    vec2 rg = texture(iChannel1, (uv + 0.5) / 256.0, lod_bias).yx;
     #endif
     return mix(rg.x, rg.y, f.z);
 }
@@ -207,9 +210,9 @@ void main()
     float floor_height = -1.;
     float floor_intersect_t = (-viewP.y + floor_height) / (viewD.y);
     vec3 p = viewP + viewD * floor_intersect_t;
-//    vec3 c = texture2D(iChannel0, p.xz * 0.125, floor_intersect_t * 2. - 16.).xyz;
+//    vec3 c = texture(iChannel0, p.xz * 0.125, floor_intersect_t * 2. - 16.).xyz;
     vec2 flippedTexCoords = vec2(vTextureCoord.s, 1.0 - vTextureCoord.t);
-    vec3 c = texture2D(iChannel0, flippedTexCoords).xyz;
+    vec3 c = texture(iChannel0, flippedTexCoords).xyz;
     c = pow(c, vec3(2.2));
     c *= 0.8;
     float ceil_intersect_t = (-viewP.y + 1.) / (viewD.y);
@@ -217,6 +220,6 @@ void main()
     vec4 a = March(vec4(0), viewP, viewD, vec2(ceil_intersect_t, floor_intersect_t));
     c = BlendUnder(a, vec4(c, 1.)).xyz;
     //	c=pow(c,vec3(1./2.2));
-    gl_FragColor = vec4(c, 1.0);
+    fragColor = vec4(c, 1.0);
 
 }

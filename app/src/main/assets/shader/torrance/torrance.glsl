@@ -1,22 +1,12 @@
-////////////////////////////////////////
-// Classic raytracing
-// Cook-Torrance shading
-//
-// The shaders displays 3 series of balls with different materials:
-// - Ground: Basic (no reflection, no refraction), roughness and density varying foreach ball.
-// - Along blue wall: Reflective materials, roughness and density varying foreach ball.
-// - Along orange wall: Refractive materials,roughness and density varying foreach ball.
-// - Center: the ball at the center is both reflective and refractive.
-//
-// Hard shadow are supported but enabled only for the ground balls.
-//
+#version 300 es
 
 precision highp float;
 precision highp int;
 
 uniform vec2 iResolution;
 uniform float iTime;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 struct Material {
     vec3 color;        // diffuse color
@@ -469,5 +459,5 @@ void main()
 
     vec3 col = raytrace(ro, rd);
 
-    gl_FragColor = vec4(col, 1.0);
+    fragColor = vec4(col, 1.0);
 }

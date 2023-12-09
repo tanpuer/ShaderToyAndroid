@@ -1,8 +1,4 @@
-/*
-"Wet stone" by Alexander Alekseev aka TDM - 2014
-License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-Contact: tdmaav@gmail.com
-*/
+#version 300 es
 
 precision highp float;
 precision highp int;
@@ -14,6 +10,8 @@ uniform int iFrame;
 uniform mat4 iViewMatrix;
 uniform vec2 resolution;
 uniform float time;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 #define iGlobalTime iTime
 
 #define SMOOTH
@@ -286,5 +284,5 @@ void main() {
     float vgn = smoothstep(1.2, 0.7, abs(iuv.y)) * smoothstep(1.1, 0.8, abs(iuv.x));
     color *= 1.0 - (1.0 - vgn) * 0.15;
 
-    gl_FragColor = vec4(color, 1.0);
+    fragColor = vec4(color, 1.0);
 }

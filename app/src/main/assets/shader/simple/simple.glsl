@@ -1,8 +1,6 @@
-// Created by klk - https://www.shadertoy.com/view/XsVSzW
-// Adapted for VS Code Shadertoy
+#version 300 es
 
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-// Created by S.Guillitte
+precision highp int;
 
 precision highp float;
 precision highp int;
@@ -14,6 +12,8 @@ uniform int iFrame;
 uniform mat4 iViewMatrix;
 uniform vec2 resolution;
 uniform float time;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 #define iGlobalTime iTime
 
 void main()
@@ -40,5 +40,5 @@ void main()
     float r = sin(uv.x - time) * 0.5 + 0.5;
     float b = sin(uv.y + time) * 0.5 + 0.5;
     float g = sin((uv.x + uv.y + sin(time * 0.5)) * 0.5) * 0.5 + 0.5;
-    gl_FragColor = vec4(r, g, b, 1.0);
+    fragColor = vec4(r, g, b, 1.0);
 }

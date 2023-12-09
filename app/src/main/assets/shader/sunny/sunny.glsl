@@ -1,8 +1,12 @@
+#version 300 es
+
 precision highp float;
 precision highp int;
 
 uniform vec2 iResolution;
 uniform float iTime;
+in vec2 vTextureCoord;
+out vec4 fragColor;
 
 const float cloudscale = 1.1;
 const float speed = 0.03;
@@ -47,7 +51,6 @@ float fbm(vec2 n) {
 // -----------------------------------------------
 
 void main() {
-    vec4 fragColor = vec4(0.);
     vec2 p = gl_FragCoord.xy / iResolution.xy;
     vec2 uv = p * vec2(iResolution.x / iResolution.y, 1.0);
     float time = iTime * speed;
@@ -114,6 +117,4 @@ void main() {
     vec3 result = mix(skycolour, clamp(skytint * skycolour + cloudcolour, 0.0, 1.0), clamp(f + c, 0.0, 1.0));
 
     fragColor = vec4(result, 1.0);
-
-    gl_FragColor = fragColor;
 }
