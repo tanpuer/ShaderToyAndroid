@@ -1,9 +1,4 @@
-//
-// Created by cw404021@alibaba-inc.com on 2023/11/27.
-//
-
-#ifndef SHADERTOYANDROID_SHADERTOYFILTER_H
-#define SHADERTOYANDROID_SHADERTOYFILTER_H
+#pragma once
 
 #include "AssetManager.h"
 #include "memory"
@@ -73,6 +68,3 @@ private:
     std::shared_ptr<AssetManager> assetManager = nullptr;
     std::string name;
 };
-
-
-#endif //SHADERTOYANDROID_SHADERTOYFILTER_H

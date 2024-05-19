@@ -1,6 +1,3 @@
-//
-// Created by cw404021@alibaba-inc.com on 2023/11/27.
-//
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "ShaderToyFilter.h"
@@ -8,7 +5,6 @@
 #include "matrix_util.h"
 #include "gl_utils.h"
 #include "stb_image.h"
-
 
 ShaderToyFilter::ShaderToyFilter(std::shared_ptr<AssetManager> assetManager,
                                  const std::string &name) {

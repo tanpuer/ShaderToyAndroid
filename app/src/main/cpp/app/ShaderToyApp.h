@@ -1,9 +1,4 @@
-//
-// Created by cw404021@alibaba-inc.com on 2023/11/27.
-//
-
-#ifndef SHADERTOYANDROID_SHADERTOYAPP_H
-#define SHADERTOYANDROID_SHADERTOYAPP_H
+#pragma once
 
 #include "jni.h"
 #include "EGLCore.h"
@@ -38,6 +33,3 @@ private:
     std::string name = "primitive";
 
 };
-
-
-#endif //SHADERTOYANDROID_SHADERTOYAPP_H

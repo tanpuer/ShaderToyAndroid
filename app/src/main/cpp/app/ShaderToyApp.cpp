@@ -1,7 +1,3 @@
-//
-// Created by cw404021@alibaba-inc.com on 2023/11/27.
-//
-
 #include "ShaderToyApp.h"
 
 ShaderToyApp::ShaderToyApp(JNIEnv *env, jobject javaAssetManager) {
