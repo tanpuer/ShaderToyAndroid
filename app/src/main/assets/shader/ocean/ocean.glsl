@@ -6,6 +6,7 @@ precision highp int;
 uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
+uniform vec4 iMouse;
 in vec2 vTextureCoord;
 out vec4 fragColor;
 
@@ -15,7 +16,6 @@ out vec4 fragColor;
 #define ITERATIONS_RAYMARCH 12 // waves iterations of raymarching
 #define ITERATIONS_NORMAL 40 // waves iterations when calculating normals
 
-#define iMouse vec3(0.0, 0.0, 0.0)
 #define NormalizedMouse (iMouse.xy / iResolution.xy) // normalize mouse coords
 
 // Calculates wave value and its derivative,

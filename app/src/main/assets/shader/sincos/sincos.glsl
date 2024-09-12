@@ -6,9 +6,9 @@ precision highp int;
 uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
+uniform vec4 iMouse;
 in vec2 vTextureCoord;
 out vec4 fragColor;
-#define iMouse vec3(0.0, 0.0, 0.0)
 
 #define A(v) mat2(cos(m.v+radians(vec4(0, -90, 90, 0))))  // rotate
 #define W(v) length(vec3(p.xy-v(p.z+vec2(pi_2, 0)+t), 0))-lt  // wave

@@ -6,6 +6,7 @@ precision highp int;
 uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
+uniform vec4 iMouse;
 in vec2 vTextureCoord;
 out vec4 fragColor;
 //#iChannel0 "assets://shader/snowglobe/iChannel0.png"
@@ -17,7 +18,6 @@ uniform sampler2D iChannel2;
 //#iChannel3 "assets://shader/snowglobe/iChannel3.png"
 uniform sampler2D iChannel3;
 
-#define iMouse vec3(0.0, 0.0, 0.0)
 
 #define PI (3.1415926535897932384626433832795)
 
