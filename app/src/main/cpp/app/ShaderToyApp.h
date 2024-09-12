@@ -24,6 +24,8 @@ public:
 
     void setName(const char *name);
 
+    void setTouch(float x, float y);
+
 private:
 
     std::unique_ptr<EGLCore> mEGLCore;

@@ -73,6 +73,12 @@ class ShaderToyEngine {
         }
     }
 
+    fun setTouch(x: Float, y: Float) {
+        shaderToyHandler.post {
+            nativeSetTouch(x, y)
+        }
+    }
+
     private external fun nativeInit(assetManager: AssetManager)
     private external fun nativeCreate(surface: Surface);
     private external fun nativeChange(width: Int, height: Int, time: Long)
@@ -80,6 +86,7 @@ class ShaderToyEngine {
     private external fun nativeDoFrame(time: Long)
     private external fun nativeRelease()
     private external fun nativeSetShaderName(name: String)
+    private external fun nativeSetTouch(x: Float, y: Float)
 
     companion object {
         init {

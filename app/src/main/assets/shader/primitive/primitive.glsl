@@ -10,6 +10,7 @@ precision highp int;
 uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
+uniform vec4 iMouse;
 in vec2 vTextureCoord;
 out vec4 fragColor;
 
@@ -608,7 +609,6 @@ return mat3( cu, cv, cw );
 
 void main()
 {
-vec3 iMouse = vec3(0.0, 0.0, 0.0);
 vec2 mo = iMouse.xy/iResolution.xy;
 float time = 32.0 + iTime*1.5;
 

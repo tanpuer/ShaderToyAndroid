@@ -38,6 +38,8 @@ public:
 
     virtual void doFrame(long timeMills);
 
+    virtual void setTouch(float x, float y);
+
 protected:
 
     int mWidth = 0, mHeight = 0;
@@ -67,4 +69,7 @@ protected:
 private:
     std::shared_ptr<AssetManager> assetManager = nullptr;
     std::string name;
+
+    float x = 0.0f, y = 0.0f;
+    float transX = 0.0f, transY = 0.0f;
 };

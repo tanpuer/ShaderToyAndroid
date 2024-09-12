@@ -53,3 +53,10 @@ void ShaderToyApp::setName(const char *name) {
     mFilter->init();
     mFilter->setWindowSize(mWidth, mHeight);
 }
+
+void ShaderToyApp::setTouch(float x, float y) {
+    if (mEGLCore == nullptr || mFilter == nullptr) {
+        return;
+    }
+    mFilter->setTouch(x, y);
+}

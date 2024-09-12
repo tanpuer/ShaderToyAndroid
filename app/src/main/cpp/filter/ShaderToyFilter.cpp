@@ -68,9 +68,9 @@ void ShaderToyFilter::setUniforms(long timeMills) {
     mFrameCount++;
     glUniform1i(iFrame, (GLint) mFrameCount);
     //5. iMouse ignore
-    GLfloat mouse[3] = {0.0, 0.0, 0.0};
+    GLfloat mouse[4] = {x, y, transX, transY};
     auto iMouse = glGetUniformLocation(mProgram, "iMouse");
-    glUniform3fv(iMouse, 1, mouse);
+    glUniform4fv(iMouse, 1, mouse);
     //6. iMouseButton ignore
 
     //7. iViewMatrix
@@ -187,4 +187,11 @@ void ShaderToyFilter::bindTextures() {
         checkGLError("ShaderToyFilter::bindTexture");
     }
 
+}
+
+void ShaderToyFilter::setTouch(float x, float y) {
+    transX = x - this->x;
+    transY = y - this->y;
+    this->x = x;
+    this->y = y;
 }

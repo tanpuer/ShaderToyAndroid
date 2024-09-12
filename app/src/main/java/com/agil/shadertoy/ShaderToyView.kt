@@ -3,6 +3,7 @@ package com.agil.shadertoy
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Choreographer
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
@@ -47,6 +48,11 @@ class ShaderToyView @JvmOverloads constructor(
 
     fun setShaderName(name: String) {
         engine.setShaderName(name)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        engine.setTouch(event.x, event.y)
+        return true
     }
 
 }

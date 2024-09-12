@@ -65,6 +65,14 @@ native_set_shader_name(JNIEnv *env, jobject instance, jstring name) {
     }
 }
 
+extern "C" JNIEXPORT void JNICALL
+native_set_touch(JNIEnv *env, jobject instance, jfloat x, jfloat y) {
+    ALOGD("native_set_touch")
+    if (app != nullptr) {
+        app->setTouch(x, y);
+    }
+}
+
 static JNINativeMethod g_RenderMethods[] = {
         {"nativeInit",          "(Landroid/content/res/AssetManager;)V", (void *) native_init},
         {"nativeCreate",        "(Landroid/view/Surface;)V",             (void *) native_create},
@@ -73,6 +81,7 @@ static JNINativeMethod g_RenderMethods[] = {
         {"nativeDoFrame",       "(J)V",                                  (void *) native_do_frame},
         {"nativeRelease",       "()V",                                   (void *) native_release},
         {"nativeSetShaderName", "(Ljava/lang/String;)V",                 (void *) native_set_shader_name},
+        {"nativeSetTouch",      "(FF)V",                                 (void *) native_set_touch},
 };
 
 static int RegisterNativeMethods(JNIEnv *env, const char *className, JNINativeMethod *nativeMethods,
