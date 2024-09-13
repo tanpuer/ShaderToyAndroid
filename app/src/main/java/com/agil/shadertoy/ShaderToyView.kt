@@ -51,7 +51,7 @@ class ShaderToyView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        engine.setTouch(event.x, event.y)
+        engine.setTouch(event.x, height - event.y)
         return true
     }
 
