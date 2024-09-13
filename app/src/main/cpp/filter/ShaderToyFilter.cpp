@@ -5,6 +5,7 @@
 #include "matrix_util.h"
 #include "gl_utils.h"
 #include "stb_image.h"
+#include <chrono>
 
 ShaderToyFilter::ShaderToyFilter(std::shared_ptr<AssetManager> assetManager,
                                  const std::string &name) {
@@ -84,6 +85,12 @@ void ShaderToyFilter::setUniforms(long timeMills) {
     glUniform1f(time, (GLfloat) timeMills / 1000);
     //10. mouse ignore
     glUniform3fv(glGetUniformLocation(mProgram, "mouse"), 1, mouse);
+    //11. iDate
+    auto date = glGetUniformLocation(mProgram, "iDate");
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = stop.time_since_epoch().count();
+    GLfloat iDate[4] = {0.0f, 0.0f, 0.0f, (float)(duration / 1000000000) };
+    glUniform4fv(date, 1, iDate);
 
     checkGLError("ShaderToyFilter::setUniforms");
 }
