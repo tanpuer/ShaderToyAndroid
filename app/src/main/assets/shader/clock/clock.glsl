@@ -9,147 +9,104 @@ uniform int iFrame;
 in vec2 vTextureCoord;
 out vec4 fragColor;
 uniform vec4 iDate;
+uniform vec4 iMouse;
 
-// this is my first try to actually use glsl almost from scratch
-// so far all i've done is learning by doing / reading glsl docs.
-// this is inspired by my non glsl â€žtimeâ€œ projects
-// especially this one: https://www.gottz.de/analoguhr.htm
+// Created by inigo quilez - iq/2013
+//   https://www.youtube.com/c/InigoQuilez
+//   https://iquilezles.org/
+// I share this piece (art and code) here in Shadertoy and through its Public API, only for educational purposes.
+// You cannot use, sell, share or host this piece or modifications of it as part of your own commercial or non-commercial product, website or project.
+// You can share a link to it or an unmodified screenshot of it provided you attribute "by Inigo Quilez, @iquilezles and iquilezles.org".
+// If you are a teacher, lecturer, educator or similar and these conditions are too restrictive for your needs, please contact me and we'll work it out.
 
-// i will most likely use a buffer in future to calculate the time
-// aswell as to draw the background of the clock only once.
-// tell me if thats a bad idea.
 
-// update:
-// screenshot: http://i.imgur.com/dF0nHDk.png
-// as soon as i think its in a usefull state i'll release the source
-// of that particular c++ application on github.
-// i hope sommeone might find it usefull :D
+// See also:
+//
+// Input - Keyboard    : https://www.shadertoy.com/view/lsXGzf
+// Input - Microphone  : https://www.shadertoy.com/view/llSGDh
+// Input - Mouse       : https://www.shadertoy.com/view/Mss3zH
+// Input - Sound       : https://www.shadertoy.com/view/Xds3Rr
+// Input - SoundCloud  : https://www.shadertoy.com/view/MsdGzn
+// Input - Time        : https://www.shadertoy.com/view/lsXGz8
+// Input - TimeDelta   : https://www.shadertoy.com/view/lsKGWV
+// Inout - 3D Texture  : https://www.shadertoy.com/view/4llcR4
 
-#define PI 3.141592653589793238462643383
 
-// from https://www.shadertoy.com/view/4s3XDn <3
-float ln(vec2 p, vec2 a, vec2 b)
+float sdLine( in vec2 p, in vec2 a, in vec2 b )
 {
-	vec2 pa = p - a;
-	vec2 ba = b - a;
-	float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-    return length(pa - ba * h);
+	vec2 pa = p-a, ba = b-a;
+	float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
+	return length( pa - ba*h );
 }
 
-// i think i should spend some time reading docs in order to minimize this.
-// hints apreciated
-// (Rotated LiNe)
-float rln(vec2 uv, float start, float end, float perc) {
-    float inp = perc * PI * 2.0;
-	vec2 coord = vec2(sin(inp), cos(inp));
-    return ln(uv, coord * start, coord * end);
+vec3 line( in vec3 buf, in vec2 a, in vec2 b, in vec2 p, in vec2 w, in vec4 col )
+{
+   float f = sdLine( p, a, b );
+   float g = fwidth(f)*w.y;
+   return mix( buf, col.xyz, col.w*(1.0-smoothstep(w.x-g, w.x+g, f)) );
 }
 
-// i need this to have an alphachannel in the output
-// i intend to use an optimized version of this shader for a transparent desktop widget experiment
-vec4 mixer(vec4 c1, vec4 c2) {
-    // please tell me if you think this would boost performance.
-    // the time i implemented mix myself it sure did reduce
-    // the amount of operations but i'm not sure now
-    // if (c2.a <= 0.0) return c1;
-    // if (c2.a >= 1.0) return c2;
-    return vec4(mix(c1.rgb, c2.rgb, c2.a), c1.a + c2.a);
-    // in case you are curious how you could implement mix yourself:
-    // return vec4(c2.rgb * c2.a + c1.rgb * (1.0-c2.a), c1.a+c2.a);
-}
-
-vec4 styleHandle(vec4 color, float px, float dist, vec3 handleColor, float width, float shadow) {
-    if (dist <= width + shadow) {
-        // lets draw the shadow
-        color = mixer(color, vec4(0.0, 0.0, 0.0,
-                                (1.0-pow(smoothstep(width, width + shadow, dist),0.2))*0.2));
-        // now lets draw the antialiased handle
-        color = mixer(color, vec4(handleColor, smoothstep(width, max(width - 3.0 * px, 0.0), dist)));
-    }
-    return color;
-}
+vec3 hash3( float n ) { return fract(sin(vec3(n,n+1.0,n+2.0))*43758.5453123); }
 
 void main()
 {
-    vec2 R = iResolution.xy;
-    // calculate the size of a pixel
-    float px = 1.0 / R.y;
-    // create percentages of the coordinate system
-    vec2 p = gl_FragCoord.xy / R;
-    // center the scene and add perspective
-    vec2 uv = (2.0 * gl_FragCoord.xy - R) / min(R.x, R.y);
+    // get time
+    float mils = fract(iDate.w);
+	float secs = mod( floor(iDate.w),        60.0 );
+	float mins = mod( floor(iDate.w/60.0),   60.0 );
+	float hors = mod( floor(iDate.w/3600.0), 24.0 );
 
-    /*vec2 uv = -1.0 + 2.0 * p.xy;
-    // lets add perspective for mobile device support
-    if (iResolution.x > iResolution.y)
-    	uv.x *= iResolution.x / iResolution.y;
-    else
-        uv.y *= iResolution.y / iResolution.x;*/
+    // enable this for subsecond resolution
+    //secs += mils;
 
-    // lets scale the scene a bit down:
-    uv *= 1.1;
-    px *= 0.9;
+	vec2 uv = (2.0*gl_FragCoord.xy-iResolution.xy)/min(iResolution.y,iResolution.x);
 
-    float width = 0.015;
-    float dist = 1.0;
-    float centerdist = length(uv);
+	float r = length( uv );
+	float a = atan( uv.y, uv.x )+3.1415926;
 
-    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+	// background color
+	vec3 nightColor = vec3( 0.2, 0.2, 0.2 ) + 0.1*uv.y;
+	vec3 dayColor   = vec3( 0.5, 0.6, 0.7 ) + 0.2*uv.y;
+	vec3 col = mix( nightColor, dayColor, smoothstep( 5.0, 7.0, hors ) -
+				                          smoothstep(19.0,21.0, hors ) );
 
-    // background of the clock
-    if (centerdist < 1.0 - width) color = mixer(color, vec4(vec3(0.5), 0.4*(1.8-length(uv))));
+    // inner watch body
+	col = mix( col, vec3(0.9-0.4*pow(r,4.0)), 1.0-smoothstep(0.94,0.95,r) );
 
-    float isRed = 1.0;
+    // 5 minute marks
+	float f = abs(2.0*fract(0.5+a*60.0/6.2831)-1.0);
+	float g = 1.0-smoothstep( 0.0, 0.1, abs(2.0*fract(0.5+a*12.0/6.2831)-1.0) );
+	float w = fwidth(f);
+	f = 1.0 - smoothstep( 0.1*g+0.05-w, 0.1*g+0.05+w, f );
+	f *= smoothstep( 0.85, 0.86, r+0.05*g ) - smoothstep( 0.94, 0.95, r );
+	col = mix( col, vec3(0.0), f );
 
-    if (centerdist > 1.0 - 12.0 * width && centerdist <= 1.1) {
-        // minute bars
-        for (float i = 0.0; i <= 15.0; i += 1.0) {
-            if (mod(i, 5.0) == 0.0) {
-                dist = min(dist, rln(abs(uv), 1.0 - 10.0 * width, 1.0 - 2.0 * width, i / 60.0));
-                // draw first bar red
-                if (i == 0.0 && uv.y > 0.0) {
-                    isRed = dist;
-                    dist = smoothstep(width, max(width - 3.0 * px, 0.0), dist);
-                    color = mixer(color, vec4(1.0, 0.0, 0.0, dist));
-                    dist = 1.0;
-                }
-            }
-            else {
-                dist = min(dist, rln(abs(uv), 1.0 - 10.0 * width, 1.0 - 7.0 * width, i / 60.0));
-            }
-        }
+	// seconds hand
+	vec2 dir;
+	dir = vec2( sin(6.2831*secs/60.0), cos(6.2831*secs/60.0) );
+    col = line( col, vec2(0.0), dir*0.9, uv+0.05, vec2(0.005,4.0), vec4(0.0,0.0,0.0,0.2) );
+    col = line( col, vec2(0.0), dir*0.0, uv+0.05, vec2(0.055,4.0), vec4(0.0,0.0,0.0,0.2) );
+    col = line( col, vec2(0.0), dir*0.9, uv,      vec2(0.005,1.0), vec4(0.5,0.0,0.0,1.0) );
 
-        // outline circle
-        dist = min(dist, abs(1.0-width-length(uv)));
-        // draw clock shadow
-        if (centerdist > 1.0)
-            color = mixer(color, vec4(0.0,0.0,0.0, 0.3*smoothstep(1.0 + width*2.0, 1.0, centerdist)));
+	// minutes hand
+	dir = vec2( sin(6.2831*mins/60.0), cos(6.2831*mins/60.0) );
+    col = line( col, vec2(0.0), dir*0.7, uv+0.05, vec2(0.015,4.0), vec4(0.0,0.0,0.0,0.2) );
+    col = line( col, vec2(0.0), dir*0.7, uv,      vec2(0.015,1.0), vec4(0.0,0.0,0.0,1.0) );
 
-        // draw outline + minute bars in white
-		color = mixer(color, vec4(0.0, 0.0, 0.0,
-			(1.0 - pow(smoothstep(width, width + 0.02, min(isRed, dist)), 0.4))*0.2));
-		color = mixer(color, vec4(vec3(1.0), smoothstep(width, max(width - 3.0 * px, 0.0), dist)));
-    }
+    // hours hand
+	dir = vec2( sin(6.2831*hors/12.0), cos(6.2831*hors/12.0) );
+    col = line( col, vec2(0.0), dir*0.4, uv+0.05, vec2(0.015,4.0), vec4(0.0,0.0,0.0,0.2) );
+    col = line( col, vec2(0.0), dir*0.4, uv,      vec2(0.015,1.0), vec4(0.0,0.0,0.0,1.0) );
 
-    if (centerdist < 1.0) {
-        float time = (floor(iDate.w)+pow(fract(iDate.w),16.0));
+    // center mini circle
+	col = mix( col, vec3(0.5), 1.0-smoothstep(0.050,0.055,r) );
+	col = mix( col, vec3(0.0), 1.0-smoothstep(0.005,0.01,abs(r-0.055)) );
 
-        // hour
-        color = styleHandle(color, px,
-                            rln(uv, -0.05, 0.5, time / 3600.0 / 12.0),
-                            vec3(1.0), 0.03, 0.02);
+    // border of watch
+	col = mix( col, vec3(0.0), 1.0-smoothstep(0.01,0.02,abs(r-0.95)) );
 
-        // minute
-        color = styleHandle(color, px,
-                            rln(uv, -0.075, 0.7, time / 3600.0),
-                            vec3(1.0), 0.02, 0.02);
+    // dithering
+    col += (1.0/255.0)*hash3(uv.x+13.0*uv.y);
 
-        // second
-        color = styleHandle(color, px,
-                            min(rln(uv, -0.1, 0.9, time / 60.0), length(uv)-0.01),
-                            vec3(1.0, 0.0, 0.0), 0.01, 0.02);
-    }
-
-
-    fragColor = color;
+	fragColor = vec4( col,1.0 );
 }
